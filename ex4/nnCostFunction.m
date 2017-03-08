@@ -62,7 +62,23 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+z2 = [ones(m, 1), X] * Theta1';
+a2 = sigmoid(z2);
+z3 = [ones(m, 1), a2] * Theta2';
+a3 = sigmoid(z3);
 
+for i=1:m,
+    # Convert output value for i'th example into binary vector
+    ym = 1:num_labels == y(i);
+
+    for k=1:num_labels,
+        # Compute J as the sum of costs for every label for every example
+        J += ym(k) * log(a3(i, k)) + (1 - ym(k)) * log(1 - a3(i, k));
+    end
+end
+
+# Include the computed sum into final equation
+J = - J / m + (lambda / (2 * m)) * (nn_params' * nn_params);
 
 
 
