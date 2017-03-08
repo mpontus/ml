@@ -62,9 +62,10 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-z2 = [ones(m, 1), X] * Theta1';
-a2 = sigmoid(z2);
-z3 = [ones(m, 1), a2] * Theta2';
+a1 = [ones(m, 1), X];
+z2 = a1 * Theta1';
+a2 = [ones(m, 1), sigmoid(z2)];
+z3 = a2 * Theta2';
 a3 = sigmoid(z3);
 
 for i=1:m,
@@ -84,7 +85,19 @@ reg_param = Theta_reg' * Theta_reg;
 # Include the computed sum into final equation
 J = - J / m + (lambda / (2 * m)) * reg_param;
 
+Delta2 = zeros(num_labels, hidden_layer_size + 1);
+Delta1 = zeros(hidden_layer_size, input_layer_size + 1);
+for t=1:m,
+    ym = (1:num_labels == y(t))';
+    d3 = a3(t, :)' - ym;
+    d2 = Theta2' * d3 .* [1; sigmoidGradient(z2(t, :)')];
+    d2 = d2(2:end);
+    Delta2 += d3 * a2(t, :);
+    Delta1 += d2 * a1(t, :);
+end
 
+Theta1_grad = [Delta1(:, 1), Delta1(:, 2:end) + lambda * Theta1(:, 2:end)] / m;
+Theta2_grad = [Delta2(:, 1), Delta2(:, 2:end) + lambda * Theta2(:, 2:end)] / m;
 
 
 
