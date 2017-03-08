@@ -75,8 +75,14 @@ for i=1:m,
     J += ym * log(a3(i, :))' + (1 - ym) * log(1 - a3(i, :))';
 end
 
+# Compute regularization parameter
+Theta1_reg = Theta1(:, 2:end);
+Theta2_reg = Theta2(:, 2:end);
+Theta_reg = [Theta1_reg(:); Theta2_reg(:)];
+reg_param = Theta_reg' * Theta_reg;
+
 # Include the computed sum into final equation
-J = - J / m + (lambda / (2 * m)) * (nn_params' * nn_params);
+J = - J / m + (lambda / (2 * m)) * reg_param;
 
 
 
