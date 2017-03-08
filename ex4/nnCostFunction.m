@@ -71,10 +71,8 @@ for i=1:m,
     # Convert output value for i'th example into binary vector
     ym = 1:num_labels == y(i);
 
-    for k=1:num_labels,
-        # Compute J as the sum of costs for every label for every example
-        J += ym(k) * log(a3(i, k)) + (1 - ym(k)) * log(1 - a3(i, k));
-    end
+    # Compute J as the sum of costs for every label for every example
+    J += ym * log(a3(i, :))' + (1 - ym) * log(1 - a3(i, :))';
 end
 
 # Include the computed sum into final equation
